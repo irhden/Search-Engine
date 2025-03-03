@@ -730,6 +730,14 @@ build tests\CMakeFiles\test_SearchEngine.dir\test_InvertedIndex.cpp.obj: CXX_COM
   TARGET_COMPILE_PDB = tests\CMakeFiles\test_SearchEngine.dir\
   TARGET_PDB = tests\test_SearchEngine.pdb
 
+build tests\CMakeFiles\test_SearchEngine.dir\test_SearchServer.cpp.obj: CXX_COMPILER__test_SearchEngine_unscanned_Debug D$:\_Projects\cpp\search_engine\tests\test_SearchServer.cpp || cmake_object_order_depends_target_test_SearchEngine
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 /Zi -std:c++14
+  INCLUDES = -ID:\_Projects\cpp\search_engine\include -external:ID:\_Projects\cpp\search_engine\out\build\x64-debug\_deps\googletest-src\googletest\include -external:ID:\_Projects\cpp\search_engine\out\build\x64-debug\_deps\googletest-src\googletest -external:W0
+  OBJECT_DIR = tests\CMakeFiles\test_SearchEngine.dir
+  OBJECT_FILE_DIR = tests\CMakeFiles\test_SearchEngine.dir
+  TARGET_COMPILE_PDB = tests\CMakeFiles\test_SearchEngine.dir\
+  TARGET_PDB = tests\test_SearchEngine.pdb
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target test_SearchEngine
@@ -738,7 +746,7 @@ build tests\CMakeFiles\test_SearchEngine.dir\test_InvertedIndex.cpp.obj: CXX_COM
 #############################################
 # Link the executable tests\test_SearchEngine.exe
 
-build tests\test_SearchEngine.exe tests\test_SearchEngine[1]_tests.cmake | ${cmake_ninja_workdir}tests\test_SearchEngine[1]_tests.cmake: CXX_EXECUTABLE_LINKER__test_SearchEngine_Debug tests\CMakeFiles\test_SearchEngine.dir\test_InvertedIndex.cpp.obj | src\search_engine_lib.lib lib\gtest_maind.lib lib\gtestd.lib || lib\gtest_maind.lib lib\gtestd.lib src\search_engine_lib.lib
+build tests\test_SearchEngine.exe tests\test_SearchEngine[1]_tests.cmake | ${cmake_ninja_workdir}tests\test_SearchEngine[1]_tests.cmake: CXX_EXECUTABLE_LINKER__test_SearchEngine_Debug tests\CMakeFiles\test_SearchEngine.dir\test_InvertedIndex.cpp.obj tests\CMakeFiles\test_SearchEngine.dir\test_SearchServer.cpp.obj | src\search_engine_lib.lib lib\gtest_maind.lib lib\gtestd.lib || lib\gtest_maind.lib lib\gtestd.lib src\search_engine_lib.lib
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 /Zi
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /DEBUG /subsystem:console
   LINK_LIBRARIES = src\search_engine_lib.lib  lib\gtest_maind.lib  lib\gtestd.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
