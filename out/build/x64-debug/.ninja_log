@@ -41,3 +41,9 @@
 1685	4046	7627271833054505	tests/test_SearchEngine.exe	3255ed7b4b420829
 1685	4046	7627271833054505	tests/test_SearchEngine[1]_tests.cmake	3255ed7b4b420829
 1685	4046	7627271833054505	D:/_Projects/cpp/search_engine/out/build/x64-debug/tests/test_SearchEngine[1]_tests.cmake	3255ed7b4b420829
+16	858	7627275664715302	src/CMakeFiles/search_engine_lib.dir/SearchServer.cpp.obj	5e50cff5f189904f
+859	961	7627275665592253	src/search_engine_lib.lib	b9ec5ff96a66ed7c
+11	3149	7627275687517745	CMakeFiles/search_engine.dir/main.cpp.obj	5e787ed8f046fed3
+3149	6376	7627275719929045	search_engine.exe	7bbec27e904e934f
+3149	6376	7627275719929045	search_engine[1]_tests.cmake	7bbec27e904e934f
+3149	6376	7627275719929045	D:/_Projects/cpp/search_engine/out/build/x64-debug/search_engine[1]_tests.cmake	7bbec27e904e934f
