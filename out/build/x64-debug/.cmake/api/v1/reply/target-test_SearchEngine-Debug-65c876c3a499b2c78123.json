@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "search_engine.exe"
+			"path" : "tests/test_SearchEngine.exe"
 		},
 		{
-			"path" : "search_engine.pdb"
+			"path" : "tests/test_SearchEngine.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -18,7 +18,7 @@
 		],
 		"files" : 
 		[
-			"CMakeLists.txt",
+			"tests/CMakeLists.txt",
 			"out/build/x64-debug/_deps/googletest-src/googletest/CMakeLists.txt"
 		],
 		"nodes" : 
@@ -29,13 +29,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 39,
+				"line" : 3,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 42,
+				"line" : 5,
 				"parent" : 0
 			},
 			{
@@ -55,7 +55,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 /Zi -std:c++20"
+					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 /Zi -std:c++14"
 				}
 			],
 			"includes" : 
@@ -63,10 +63,6 @@
 				{
 					"backtrace" : 2,
 					"path" : "D:/_Projects/cpp/search_engine/include"
-				},
-				{
-					"backtrace" : 2,
-					"path" : "D:/_Projects/cpp/search_engine/nlohmann_json/include"
 				},
 				{
 					"backtrace" : 2,
@@ -86,11 +82,12 @@
 				[
 					2
 				],
-				"standard" : "20"
+				"standard" : "14"
 			},
 			"sourceIndexes" : 
 			[
-				0
+				0,
+				1
 			]
 		}
 	],
@@ -98,18 +95,18 @@
 	[
 		{
 			"backtrace" : 2,
+			"id" : "gtest::@1ea2dfc0605fe3ab2a3f"
+		},
+		{
+			"backtrace" : 2,
 			"id" : "search_engine_lib::@145eef247bfb46b6828c"
 		},
 		{
 			"backtrace" : 2,
 			"id" : "gtest_main::@1ea2dfc0605fe3ab2a3f"
-		},
-		{
-			"backtrace" : 2,
-			"id" : "gtest::@1ea2dfc0605fe3ab2a3f"
 		}
 	],
-	"id" : "search_engine::@6890427a1f51a3e7e1df",
+	"id" : "test_SearchEngine::@a44f0ac069e85531cdee",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -144,12 +141,12 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "search_engine",
-	"nameOnDisk" : "search_engine.exe",
+	"name" : "test_SearchEngine",
+	"nameOnDisk" : "test_SearchEngine.exe",
 	"paths" : 
 	{
-		"build" : ".",
-		"source" : "."
+		"build" : "tests",
+		"source" : "tests"
 	},
 	"sourceGroups" : 
 	[
@@ -157,13 +154,7 @@
 			"name" : "Source Files",
 			"sourceIndexes" : 
 			[
-				0
-			]
-		},
-		{
-			"name" : "",
-			"sourceIndexes" : 
-			[
+				0,
 				1
 			]
 		}
@@ -173,13 +164,14 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "main.cpp",
+			"path" : "tests/test_InvertedIndex.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 2,
-			"path" : "nlohmann_json/nlohmann_json.natvis",
-			"sourceGroupIndex" : 1
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "tests/test_SearchServer.cpp",
+			"sourceGroupIndex" : 0
 		}
 	],
 	"type" : "EXECUTABLE"
