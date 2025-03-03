@@ -1,5 +1,0 @@
-if(EXISTS "D:/_Projects/cpp/search_engine/out/build/x64-debug/tests/test_InvertedIndex[1]_tests.cmake")
-  include("D:/_Projects/cpp/search_engine/out/build/x64-debug/tests/test_InvertedIndex[1]_tests.cmake")
-else()
-  add_test(test_InvertedIndex_NOT_BUILT test_InvertedIndex_NOT_BUILT)
-endif()

@@ -1,5 +1,0 @@
-add_test([=[TestCaseSearchServer.TestSimple]=]  D:/_Projects/cpp/search_engine/out/build/x64-debug/tests/test_SearchServer.exe [==[--gtest_filter=TestCaseSearchServer.TestSimple]==] --gtest_also_run_disabled_tests)
-set_tests_properties([=[TestCaseSearchServer.TestSimple]=]  PROPERTIES WORKING_DIRECTORY D:/_Projects/cpp/search_engine/out/build/x64-debug/tests SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
-add_test([=[TestCaseSearchServer.TestTop5]=]  D:/_Projects/cpp/search_engine/out/build/x64-debug/tests/test_SearchServer.exe [==[--gtest_filter=TestCaseSearchServer.TestTop5]==] --gtest_also_run_disabled_tests)
-set_tests_properties([=[TestCaseSearchServer.TestTop5]=]  PROPERTIES WORKING_DIRECTORY D:/_Projects/cpp/search_engine/out/build/x64-debug/tests SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==])
-set(  test_SearchServer_TESTS TestCaseSearchServer.TestSimple TestCaseSearchServer.TestTop5)

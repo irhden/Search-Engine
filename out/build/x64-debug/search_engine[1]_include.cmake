@@ -1,5 +1,0 @@
-if(EXISTS "D:/_Projects/cpp/search_engine/out/build/x64-debug/search_engine[1]_tests.cmake")
-  include("D:/_Projects/cpp/search_engine/out/build/x64-debug/search_engine[1]_tests.cmake")
-else()
-  add_test(search_engine_NOT_BUILT search_engine_NOT_BUILT)
-endif()

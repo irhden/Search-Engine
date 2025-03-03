@@ -1,6 +1,5 @@
 #pragma once
 #include "InvertedIndex.h"
-#include <algorithm>
 
 struct RelativeIndex {
 	size_t doc_id;
