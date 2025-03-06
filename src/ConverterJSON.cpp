@@ -104,7 +104,7 @@ std::vector<std::string> ConverterJSON::GetRequests() {
 }
 
 
-void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>> answers) {
+void ConverterJSON::PutAnswers(std::vector<std::vector<std::pair<int, float>>> answers) {
 	nlohmann::json resultJson;
 	int requestID = 1;	// Текущий номер запроса.
 

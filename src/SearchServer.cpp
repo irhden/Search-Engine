@@ -1,10 +1,11 @@
 #include "SearchServer.h"
+#include "SearchServer.h"
 
-std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input) {
+std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<std::string>& queriesInput, const int& maxResponses) {
    std::vector<std::vector<RelativeIndex>> results; // Итоговый список результатов.
 
 	// Разбивка поискового запроса на отдельные слова и формирование из них список уникальных:
-   for (const std::string& requests : queries_input) {
+   for (const std::string& requests : queriesInput) {
       std::vector<std::string> uniqueWords;     // Список уникальных слов.
       std::map<size_t, size_t> docsRelevance;   // Релевантность документов.
 
@@ -42,7 +43,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
       // Подсчитываем абсолютную релевантность каждого документа (сумма count):
       for (auto& _word : wordFrequencies) {
          for (auto& entry : _index.GetWordCount(_word.first)) {
-            docsRelevance[entry.doc_id] += entry.count;  // Суммируем частоту слов.
+            docsRelevance[entry.docID] += entry.count;  // Суммируем частоту слов.
          }
       }
 
@@ -58,8 +59,8 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
       std::vector<RelativeIndex> rankedResults;
       for (auto& relevance : docsRelevance) {
          float rank = (float)relevance.second / maxRelevance;
-         size_t doc_id = relevance.first;    // Номер документа - переменная нужна чисто для ясности.
-         rankedResults.push_back({ doc_id, rank });
+         size_t docID = relevance.first;    // Номер документа - переменная нужна чисто для ясности.
+         rankedResults.push_back({ docID, rank });
       }
 
       // Сортировка документов по убыванию относительной релевантности:
@@ -67,14 +68,20 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
          return a.rank > b.rank;
       });
 
+      // Ограничиваем количество результатов по maxResponses:
+      if (rankedResults.size() > maxResponses) {
+         rankedResults.resize(maxResponses);  // Обрезаем до maxResponses:
+      }
+
       // Добавление отсортированного результата в общий список:
       results.push_back(rankedResults);
    }
 
+//    Вывод в консоль (для отладки):
    //for (int i = 0; i < results.size(); i++) {
    //   std::cout << "NEXT REQ:\n";
    //   for (int j = 0; j < results[i].size(); j++) {
-   //      std::cout << "doc_id: " << results[i][j].doc_id << " \t-\t rank: " << results[i][j].rank << "\n";
+   //      std::cout << "docID: " << results[i][j].docID << " \t-\t rank: " << results[i][j].rank << "\n";
    //   }
    //   std::cout << "\n";
    //}
@@ -88,15 +95,24 @@ std::vector<std::vector<std::pair<int, float>>> SearchServer::ConvertToPairs(con
 
    // Проходим по каждому списку документов в searchResults:
    for (const auto& resultList : searchResults) {
-      std::vector<std::pair<int, float>> convertedList;  // Локальный список для хранения пар <doc_id, rank>.
+      std::vector<std::pair<int, float>> convertedList;  // Локальный список для хранения пар <docID, rank>.
 
       // Проходим по каждому элементу RelativeIndex в текущем списке:
       for (const auto& result : resultList) {
-         convertedList.push_back({ result.doc_id, result.rank }); // Добавляем в список пару <doc_id, rank>.
+         convertedList.push_back({ result.docID, result.rank }); // Добавляем в список пару <docID, rank.
       }
       // Добавляем готовый список в общий список результатов:
       convertedResults.push_back(std::move(convertedList));
    }
+   
+   return convertedResults;   // Возвращаем преобразованный список.
+}
 
-   return convertedResults;   // Возвращаем преобразованный список
+int SearchServer::CountSearchResults(const std::vector<std::vector<RelativeIndex>>& searchResults) {
+   int totalResults = 0;
+   for (const auto& query_results : searchResults) {
+      totalResults += query_results.size();
+   }
+//   std::cout << "Total results: " << totalResults << std::endl;    // Для отладки.
+   return totalResults;
 }

@@ -9,12 +9,12 @@
 
 
 struct Entry {
-	size_t doc_id;		// Номер элемента в векторе docs, по которому хранится текст.
-	size_t count;	// Число, которое обозначает, сколько раз ключевое слово встретилось в документе doc_id.
+	size_t docID;		// Номер элемента в векторе docs, по которому хранится текст.
+	size_t count;	// Число, которое обозначает, сколько раз ключевое слово встретилось в документе docID.
 
 	// Данный оператор необходим для проведения тестовых сценариев
 	bool operator ==(const Entry& other) const {
-		return (doc_id == other.doc_id &&
+		return (docID == other.docID &&
 			count == other.count);
 	}
 };
@@ -28,7 +28,7 @@ public:
 	* Обновить или заполнить базу документов, по которой будем совершать поиск
 	* @param input_docs содержимое документов
 	*/
-	void UpdateDocumentBase(std::vector<std::string> input_docs);
+	void UpdateDocumentBase(std::vector<std::string> inputDocs);
 
 	/**
 	* Метод определяет количество вхождений слова word в загруженной базе документов
@@ -43,6 +43,6 @@ private:
 	std::vector<std::string> docs;
 
 	// Частотный словарь, это коллекция для хранения частоты слов, встречаемых в тексте:
-	std::map<std::string, std::vector<Entry>> freq_dictionary;
+	std::map<std::string, std::vector<Entry>> freqDictionary;
 };
 

@@ -34,7 +34,7 @@ public:
 	/**
 	* Положить в файл answers.json результаты поисковых запросов
 	*/
-	void putAnswers(std::vector<std::vector<std::pair<int, float>>> answers);
+	void PutAnswers(std::vector<std::vector<std::pair<int, float>>> answers);
 
 private:
 	const std::string& configFile = "config.json";

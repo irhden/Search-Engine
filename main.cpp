@@ -13,31 +13,21 @@ int main() {
 
 		std::vector<std::string> requests = jsonData.GetRequests();	 // Получаем запросы.
 		int maxResponses = jsonData.GetResponsesLimit();	// Ограничение количества запросов.
-		int counterRequests = 1;	// Счётчик обработанных запросов.
 
-		// Создаём сервер поиска
+		// Создаём сервер поиска:
 		SearchServer server(invIndex);
 
-		// Выполняем поиск
-		std::vector<std::vector<RelativeIndex>> searchResults = server.search(requests);
+		// Выполняем поиск:
+		std::vector<std::vector<RelativeIndex>> searchResults = server.Search(requests, maxResponses);
 
 		// Конвертируем результаты в нужный формат:
 		std::vector<std::vector<std::pair<int, float>>> resultList = server.ConvertToPairs(searchResults);
 
-		// общее количество результатов:
-		size_t total_count = 0;
-		for (const auto& query_results : searchResults) {
-			total_count += query_results.size();
-		}
-		std::cout << "Total results found: " << total_count << std::endl;
+		// Общее количество результатов:
+		int totalResults = SearchServer::CountSearchResults(searchResults);
 
 		// Записываем результаты в answers.json:
-		jsonData.putAnswers(resultList);
-
-		//if (counterRequests > maxResponses) {
-		//	std::cout << "Request limit exceeded!" << std::endl;
-		//}
-		//counterRequests++;
+		jsonData.PutAnswers(resultList);
 	}
 	catch (const std::exception& exp) {
 		std::cerr << exp.what() << "\n";

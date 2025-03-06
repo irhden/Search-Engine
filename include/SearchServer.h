@@ -2,11 +2,11 @@
 #include "InvertedIndex.h"
 
 struct RelativeIndex {
-	size_t doc_id;
+	size_t docID;
 	float rank;
 
 	bool operator ==(const RelativeIndex& other) const {
-		return (doc_id == other.doc_id && rank == other.rank);
+		return (docID == other.docID && rank == other.rank);
 	}
 };
 
@@ -23,14 +23,21 @@ public:
 	* @param queries_input поисковые запросы взятые из файла requests.json
 	* @return возвращает отсортированный список релевантных ответов для заданных запросов
 	*/
-	std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input);
+	std::vector<std::vector<RelativeIndex>> Search(const std::vector<std::string>& queriesInput, const int& maxResponses);
 
 	/**
 	* Конвертирование результатов метода search, для передачи в функцию ConverterJSON::putAnswers
-	* @param searchResults список результатов поиска, полученные с метода search
+	* @param searchResults - список результатов поиска, полученных с метода search, где каждый внутренний вектор представляет результаты поиска для одного запроса
 	* @return возвращает конвертированный список результатов
 	*/
 	std::vector<std::vector<std::pair<int, float>>> ConvertToPairs(const std::vector<std::vector<RelativeIndex>>& searchResults);
+
+	/**
+	* Считает общее количество результатов после поиска в файлах
+	* @param searchResults - список результатов поиска, полученных с метода search, где каждый внутренний вектор представляет результаты поиска для одного запроса
+	* @return Общее количество результатов
+	*/
+	static int CountSearchResults(const std::vector<std::vector<RelativeIndex>>& searchResults);
 
 private:
 	InvertedIndex _index;
