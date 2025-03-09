@@ -26,6 +26,25 @@ int main() {
 		// Общее количество результатов:
 		int totalResults = SearchServer::CountSearchResults(searchResults);
 
+		// Выводим общее количество найденных результатов:
+		std::cout << totalResults << " results found.\n";
+		int numRequest = 1;	// Счётчик для нумерации запросов.
+
+		// Проходим по всем результатам поиска для каждого запроса:
+		for (auto& entries : searchResults) {
+			// Выводим номер текущего запроса:
+			std::cout << "Request #" << numRequest << ":\n";
+			numRequest++;	// Увеличиваем счётчик запросов.
+
+			// Перебираем найденные документы для текущего запроса:
+			for (int i = 0; i < entries.size(); i++) {
+				// Выводим идентификатор документа и его релевантность:
+				std::cout << "Doc ID: " << entries[i].docID << " \tRank: " << entries[i].rank << "\n";
+			}
+
+			std::cout << "\n";
+		}
+
 		// Записываем результаты в answers.json:
 		jsonData.PutAnswers(resultList);
 	}
