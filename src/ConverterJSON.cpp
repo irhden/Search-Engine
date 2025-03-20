@@ -1,125 +1,125 @@
 #include "ConverterJSON.h"
 
 std::vector<std::string> ConverterJSON::GetTextDocuments() {
-	// Открываем файл config.json:
+	// РћС‚РєСЂС‹РІР°РµРј С„Р°Р№Р» config.json:
 	std::ifstream file(configFile);
 	if (!file.is_open()) {
-		// Ошибка, если файл отсутствует:
+		// РћС€РёР±РєР°, РµСЃР»Рё С„Р°Р№Р» РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚:
 		throw std::runtime_error("config file is missing.");
 	}
 	
-	nlohmann::json jsonData;	// Для хранение данных из файла JSON.
-	file >> jsonData;				// Загружаем содержимое файла в jsonData. 
-	file.close();					// Со спокойной душой закрываем файл JSON.
+	nlohmann::json jsonData;	// Р”Р»СЏ С…СЂР°РЅРµРЅРёРµ РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р° JSON.
+	file >> jsonData;				// Р—Р°РіСЂСѓР¶Р°РµРј СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° РІ jsonData. 
+	file.close();					// РЎРѕ СЃРїРѕРєРѕР№РЅРѕР№ РґСѓС€РѕР№ Р·Р°РєСЂС‹РІР°РµРј С„Р°Р№Р» JSON.
 
-	// Проверяем, есть ли поле "config":
+	// РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё РїРѕР»Рµ "config":
 	if (!jsonData.contains("config")) {
-		// Ошибка, если поле "config" отсутствует:
+		// РћС€РёР±РєР°, РµСЃР»Рё РїРѕР»Рµ "config" РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚:
 		throw std::runtime_error("config file is empty");
 	}
 
-	// Проверяем, содержится ли массив "files" в JSON
+	// РџСЂРѕРІРµСЂСЏРµРј, СЃРѕРґРµСЂР¶РёС‚СЃСЏ Р»Рё РјР°СЃСЃРёРІ "files" РІ JSON
 	if (!jsonData.contains("files")) {
-		// Ошибка, если массива нет:
+		// РћС€РёР±РєР°, РµСЃР»Рё РјР°СЃСЃРёРІР° РЅРµС‚:
 		throw std::runtime_error("key 'files' is missing");
 	}
 
 	auto& fileList = jsonData["files"];
-	std::vector<std::string> documents;	// Вектор для хранения содержимого файлов.
-	documents.reserve(fileList.size()); // Резервируем место
+	std::vector<std::string> documents;	// Р’РµРєС‚РѕСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃРѕРґРµСЂР¶РёРјРѕРіРѕ С„Р°Р№Р»РѕРІ.
+	documents.reserve(fileList.size()); // Р РµР·РµСЂРІРёСЂСѓРµРј РјРµСЃС‚Рѕ
 
-	// Перебираем все элементы массива "files" из файла:
+	// РџРµСЂРµР±РёСЂР°РµРј РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РјР°СЃСЃРёРІР° "files" РёР· С„Р°Р№Р»Р°:
 	for (auto& filePath : fileList) {
 		std::ifstream currentDocument(filePath.get<std::string>());
 
-		// Открываем файлы, указанные в JSON:
+		// РћС‚РєСЂС‹РІР°РµРј С„Р°Р№Р»С‹, СѓРєР°Р·Р°РЅРЅС‹Рµ РІ JSON:
 		if (!currentDocument.is_open()) {
-			// Ошибка, если файл отсутствует:
+			// РћС€РёР±РєР°, РµСЃР»Рё С„Р°Р№Р» РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚:
 			std::cout << "Can't open file: " << filePath << "\n";
-			documents.pop_back();	// Файла нету, а значит и место в векторе, для него не нужно.
+			documents.pop_back();	// Р¤Р°Р№Р»Р° РЅРµС‚Сѓ, Р° Р·РЅР°С‡РёС‚ Рё РјРµСЃС‚Рѕ РІ РІРµРєС‚РѕСЂРµ, РґР»СЏ РЅРµРіРѕ РЅРµ РЅСѓР¶РЅРѕ.
 		}
 
-		// Помещаем весь файл в строку:
+		// РџРѕРјРµС‰Р°РµРј РІРµСЃСЊ С„Р°Р№Р» РІ СЃС‚СЂРѕРєСѓ:
 		std::string data((std::istreambuf_iterator<char>(currentDocument)), std::istreambuf_iterator<char>());
 		currentDocument.close();
-		documents.push_back(data);	// Добавляем содержимое файла в вектор.
+		documents.push_back(data);	// Р”РѕР±Р°РІР»СЏРµРј СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° РІ РІРµРєС‚РѕСЂ.
 	}
 
-	return documents;	// Возвращаем список запросов.
+	return documents;	// Р’РѕР·РІСЂР°С‰Р°РµРј СЃРїРёСЃРѕРє Р·Р°РїСЂРѕСЃРѕРІ.
 }
 
 
 int ConverterJSON::GetResponsesLimit() {
-	// Открываем файл config.json:
+	// РћС‚РєСЂС‹РІР°РµРј С„Р°Р№Р» config.json:
 	std::ifstream file(configFile);
 
 	if (!file.is_open()) {
-		throw std::runtime_error("config file is missing."); 	// Ошибка, если файл отсутствует.
+		throw std::runtime_error("config file is missing."); 	// РћС€РёР±РєР°, РµСЃР»Рё С„Р°Р№Р» РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚.
 	}
 
-	nlohmann::json jsonData;	// Для хранение данных из файла JSON.
-	file >> jsonData;				// Загружаем содержимое файла в jsonData.
-	file.close();					// Со спокойной душой закрываем файл JSON.
+	nlohmann::json jsonData;	// Р”Р»СЏ С…СЂР°РЅРµРЅРёРµ РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р° JSON.
+	file >> jsonData;				// Р—Р°РіСЂСѓР¶Р°РµРј СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° РІ jsonData.
+	file.close();					// РЎРѕ СЃРїРѕРєРѕР№РЅРѕР№ РґСѓС€РѕР№ Р·Р°РєСЂС‹РІР°РµРј С„Р°Р№Р» JSON.
 
-	// Проверяем, есть ли поле "config":
+	// РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё РїРѕР»Рµ "config":
 	if (!jsonData.contains("config")) {
-		throw std::runtime_error("config file is empty");	// Ошибка, если поле "config" отсутствует.
+		throw std::runtime_error("config file is empty");	// РћС€РёР±РєР°, РµСЃР»Рё РїРѕР»Рµ "config" РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚.
 	}
 
-	// Проверяем, указано ли значение для max_responses:
+	// РџСЂРѕРІРµСЂСЏРµРј, СѓРєР°Р·Р°РЅРѕ Р»Рё Р·РЅР°С‡РµРЅРёРµ РґР»СЏ max_responses:
 	if (!jsonData["config"].contains("max_responses")) {
-		return 5;  // Если нет, возвращаем значение по умолчанию.
+		return 5;  // Р•СЃР»Рё РЅРµС‚, РІРѕР·РІСЂР°С‰Р°РµРј Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ.
 	}
 
-	// Возвращаем полученное значение максимального количества запросов:
+	// Р’РѕР·РІСЂР°С‰Р°РµРј РїРѕР»СѓС‡РµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР° Р·Р°РїСЂРѕСЃРѕРІ:
 	return jsonData["config"]["max_responses"].get<int>();
 }
 
 
 std::vector<std::string> ConverterJSON::GetRequests() {
-	// Открываем файл requests.json:
+	// РћС‚РєСЂС‹РІР°РµРј С„Р°Р№Р» requests.json:
 	std::ifstream file(requestsFile);
 
 	if (!file.is_open()) {
-		throw std::runtime_error("requests file is missing.");	// Ошибка, если файл отсутствует.
+		throw std::runtime_error("requests file is missing.");	// РћС€РёР±РєР°, РµСЃР»Рё С„Р°Р№Р» РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚.
 	}
 
-	nlohmann::json jsonData;	// Для хранение данных из файла JSON.
-	file >> jsonData;				// Загружаем содержимое файла в jsonData. 
-	file.close();					// Со спокойной душой закрываем файл JSON.
+	nlohmann::json jsonData;	// Р”Р»СЏ С…СЂР°РЅРµРЅРёРµ РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р° JSON.
+	file >> jsonData;				// Р—Р°РіСЂСѓР¶Р°РµРј СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° РІ jsonData. 
+	file.close();					// РЎРѕ СЃРїРѕРєРѕР№РЅРѕР№ РґСѓС€РѕР№ Р·Р°РєСЂС‹РІР°РµРј С„Р°Р№Р» JSON.
 
-	// Проверяем, есть ли поле "requests":
+	// РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё РїРѕР»Рµ "requests":
 	if (!jsonData.contains("requests")) {
-		throw std::runtime_error("requests file is empty");	// Ошибка, если поле "requests" отсутствует.
+		throw std::runtime_error("requests file is empty");	// РћС€РёР±РєР°, РµСЃР»Рё РїРѕР»Рµ "requests" РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚.
 	}
 
-	std::vector<std::string> requests;	// Вектор для хранения запросов.
+	std::vector<std::string> requests;	// Р’РµРєС‚РѕСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ Р·Р°РїСЂРѕСЃРѕРІ.
 
-	// Перебираем все элементы массива "requests" из файла:
+	// РџРµСЂРµР±РёСЂР°РµРј РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РјР°СЃСЃРёРІР° "requests" РёР· С„Р°Р№Р»Р°:
 	for (auto& req : jsonData["requests"]) {
-		requests.push_back(req);	// И добавляем в наш вектор с запросами.
+		requests.push_back(req);	// Р РґРѕР±Р°РІР»СЏРµРј РІ РЅР°С€ РІРµРєС‚РѕСЂ СЃ Р·Р°РїСЂРѕСЃР°РјРё.
 	}
 
-	return requests;	// Возвращаем список запросов.
+	return requests;	// Р’РѕР·РІСЂР°С‰Р°РµРј СЃРїРёСЃРѕРє Р·Р°РїСЂРѕСЃРѕРІ.
 }
 
 
 void ConverterJSON::PutAnswers(std::vector<std::vector<std::pair<int, float>>> answers) {
 	nlohmann::json resultJson;
-	int requestID = 1;	// Текущий номер запроса.
+	int requestID = 1;	// РўРµРєСѓС‰РёР№ РЅРѕРјРµСЂ Р·Р°РїСЂРѕСЃР°.
 
-	// Обработка каждого запроса
+	// РћР±СЂР°Р±РѕС‚РєР° РєР°Р¶РґРѕРіРѕ Р·Р°РїСЂРѕСЃР°
 	for (auto& answer : answers) {
-		nlohmann::json answerJson;	// Json c результатами поиска.
+		nlohmann::json answerJson;	// Json c СЂРµР·СѓР»СЊС‚Р°С‚Р°РјРё РїРѕРёСЃРєР°.
 
-		// Если ответ пустой:
+		// Р•СЃР»Рё РѕС‚РІРµС‚ РїСѓСЃС‚РѕР№:
 		if (answer.empty()) {
 			answerJson["result"] = "false";
 		}
 		else {
 			answerJson["result"] = "true";
 
-			// Если найдено больше одного документа
+			// Р•СЃР»Рё РЅР°Р№РґРµРЅРѕ Р±РѕР»СЊС€Рµ РѕРґРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
 			if (answer.size() > 1) {
 				nlohmann::json relevanceData;
 
@@ -128,26 +128,26 @@ void ConverterJSON::PutAnswers(std::vector<std::vector<std::pair<int, float>>> a
 				}
 				answerJson["relevance"] = relevanceData;
 			}
-			// Если найден только один документ
+			// Р•СЃР»Рё РЅР°Р№РґРµРЅ С‚РѕР»СЊРєРѕ РѕРґРёРЅ РґРѕРєСѓРјРµРЅС‚
 			else {
 				answerJson["docid"] = answer[0].first;
 				answerJson["rank"] = answer[0].second;
 			}
 		}
 
-		// Создаём строковый поток для форматирования номера запроса:
+		// РЎРѕР·РґР°С‘Рј СЃС‚СЂРѕРєРѕРІС‹Р№ РїРѕС‚РѕРє РґР»СЏ С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёСЏ РЅРѕРјРµСЂР° Р·Р°РїСЂРѕСЃР°:
 		std::ostringstream formattedID;
 		
-		// Записываем в поток слово "request", затем номер запроса, 
-		// выравнивая его по 3 символам и заполняя ведущими нулями
+		// Р—Р°РїРёСЃС‹РІР°РµРј РІ РїРѕС‚РѕРє СЃР»РѕРІРѕ "request", Р·Р°С‚РµРј РЅРѕРјРµСЂ Р·Р°РїСЂРѕСЃР°, 
+		// РІС‹СЂР°РІРЅРёРІР°СЏ РµРіРѕ РїРѕ 3 СЃРёРјРІРѕР»Р°Рј Рё Р·Р°РїРѕР»РЅСЏСЏ РІРµРґСѓС‰РёРјРё РЅСѓР»СЏРјРё
 		formattedID << "request" << std::setw(3) << std::setfill('0') << requestID;
 
-		// Преобразуем поток в строку и добавляем ответ в JSON с соответствующим requestID:
+		// РџСЂРµРѕР±СЂР°Р·СѓРµРј РїРѕС‚РѕРє РІ СЃС‚СЂРѕРєСѓ Рё РґРѕР±Р°РІР»СЏРµРј РѕС‚РІРµС‚ РІ JSON СЃ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРј requestID:
 		resultJson["answers"][formattedID.str()] = answerJson;
-		requestID++;	// Увеличиваем для следующего запроса.
+		requestID++;	// РЈРІРµР»РёС‡РёРІР°РµРј РґР»СЏ СЃР»РµРґСѓСЋС‰РµРіРѕ Р·Р°РїСЂРѕСЃР°.
 	}
 
-	// Открываем файл answers.json и сохраняем результат:
+	// РћС‚РєСЂС‹РІР°РµРј С„Р°Р№Р» answers.json Рё СЃРѕС…СЂР°РЅСЏРµРј СЂРµР·СѓР»СЊС‚Р°С‚:
 	std::ofstream file(answersFile);
-	file << resultJson.dump(4);  // Сохраняем с отступами для читаемости.
+	file << resultJson.dump(4);  // РЎРѕС…СЂР°РЅСЏРµРј СЃ РѕС‚СЃС‚СѓРїР°РјРё РґР»СЏ С‡РёС‚Р°РµРјРѕСЃС‚Рё.
 }
