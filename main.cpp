@@ -4,48 +4,48 @@
 
 int main() {
 	try {
-		ConverterJSON jsonData;		// Предоставляет доступ к JSON файлам, для работы с их содержимым.
+		ConverterJSON jsonData;		// РџСЂРµРґРѕСЃС‚Р°РІР»СЏРµС‚ РґРѕСЃС‚СѓРї Рє JSON С„Р°Р№Р»Р°Рј, РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РёС… СЃРѕРґРµСЂР¶РёРјС‹Рј.
 		InvertedIndex invIndex;
 
-		// Загружаем документы и создаём индекс:
+		// Р—Р°РіСЂСѓР¶Р°РµРј РґРѕРєСѓРјРµРЅС‚С‹ Рё СЃРѕР·РґР°С‘Рј РёРЅРґРµРєСЃ:
 		std::vector<std::string> documents = jsonData.GetTextDocuments();
 		invIndex.UpdateDocumentBase(documents);
 
-		std::vector<std::string> requests = jsonData.GetRequests();	 // Получаем запросы.
-		int maxResponses = jsonData.GetResponsesLimit();	// Ограничение количества запросов.
+		std::vector<std::string> requests = jsonData.GetRequests();	 // РџРѕР»СѓС‡Р°РµРј Р·Р°РїСЂРѕСЃС‹.
+		int maxResponses = jsonData.GetResponsesLimit();	// РћРіСЂР°РЅРёС‡РµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° Р·Р°РїСЂРѕСЃРѕРІ.
 
-		// Создаём сервер поиска:
+		// РЎРѕР·РґР°С‘Рј СЃРµСЂРІРµСЂ РїРѕРёСЃРєР°:
 		SearchServer server(invIndex);
 
-		// Выполняем поиск:
+		// Р’С‹РїРѕР»РЅСЏРµРј РїРѕРёСЃРє:
 		std::vector<std::vector<RelativeIndex>> searchResults = server.Search(requests, maxResponses);
 
-		// Конвертируем результаты в нужный формат:
+		// РљРѕРЅРІРµСЂС‚РёСЂСѓРµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІ РЅСѓР¶РЅС‹Р№ С„РѕСЂРјР°С‚:
 		std::vector<std::vector<std::pair<int, float>>> resultList = server.ConvertToPairs(searchResults);
 
-		// Общее количество результатов:
+		// РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ:
 		int totalResults = SearchServer::CountSearchResults(searchResults);
 
-		// Выводим общее количество найденных результатов:
+		// Р’С‹РІРѕРґРёРј РѕР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РЅР°Р№РґРµРЅРЅС‹С… СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ:
 		std::cout << totalResults << " results found.\n";
-		int numRequest = 1;	// Счётчик для нумерации запросов.
+		int numRequest = 1;	// РЎС‡С‘С‚С‡РёРє РґР»СЏ РЅСѓРјРµСЂР°С†РёРё Р·Р°РїСЂРѕСЃРѕРІ.
 
-		// Проходим по всем результатам поиска для каждого запроса:
+		// РџСЂРѕС…РѕРґРёРј РїРѕ РІСЃРµРј СЂРµР·СѓР»СЊС‚Р°С‚Р°Рј РїРѕРёСЃРєР° РґР»СЏ РєР°Р¶РґРѕРіРѕ Р·Р°РїСЂРѕСЃР°:
 		for (auto& entries : searchResults) {
-			// Выводим номер текущего запроса:
+			// Р’С‹РІРѕРґРёРј РЅРѕРјРµСЂ С‚РµРєСѓС‰РµРіРѕ Р·Р°РїСЂРѕСЃР°:
 			std::cout << "Request #" << numRequest << ":\n";
-			numRequest++;	// Увеличиваем счётчик запросов.
+			numRequest++;	// РЈРІРµР»РёС‡РёРІР°РµРј СЃС‡С‘С‚С‡РёРє Р·Р°РїСЂРѕСЃРѕРІ.
 
-			// Перебираем найденные документы для текущего запроса:
+			// РџРµСЂРµР±РёСЂР°РµРј РЅР°Р№РґРµРЅРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹ РґР»СЏ С‚РµРєСѓС‰РµРіРѕ Р·Р°РїСЂРѕСЃР°:
 			for (int i = 0; i < entries.size(); i++) {
-				// Выводим идентификатор документа и его релевантность:
+				// Р’С‹РІРѕРґРёРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚Р° Рё РµРіРѕ СЂРµР»РµРІР°РЅС‚РЅРѕСЃС‚СЊ:
 				std::cout << "Doc ID: " << entries[i].docID << " \tRank: " << entries[i].rank << "\n";
 			}
 
 			std::cout << "\n";
 		}
 
-		// Записываем результаты в answers.json:
+		// Р—Р°РїРёСЃС‹РІР°РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІ answers.json:
 		jsonData.PutAnswers(resultList);
 	}
 	catch (const std::exception& exp) {

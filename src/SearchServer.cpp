@@ -2,52 +2,52 @@
 #include "SearchServer.h"
 
 std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<std::string>& queriesInput, const int& maxResponses) {
-   std::vector<std::vector<RelativeIndex>> results; // Итоговый список результатов.
+   std::vector<std::vector<RelativeIndex>> results; // РС‚РѕРіРѕРІС‹Р№ СЃРїРёСЃРѕРє СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ.
 
-	// Разбивка поискового запроса на отдельные слова и формирование из них список уникальных:
+	// Р Р°Р·Р±РёРІРєР° РїРѕРёСЃРєРѕРІРѕРіРѕ Р·Р°РїСЂРѕСЃР° РЅР° РѕС‚РґРµР»СЊРЅС‹Рµ СЃР»РѕРІР° Рё С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РёР· РЅРёС… СЃРїРёСЃРѕРє СѓРЅРёРєР°Р»СЊРЅС‹С…:
    for (const std::string& requests : queriesInput) {
-      std::vector<std::string> uniqueWords;     // Список уникальных слов.
-      std::map<size_t, size_t> docsRelevance;   // Релевантность документов.
+      std::vector<std::string> uniqueWords;     // РЎРїРёСЃРѕРє СѓРЅРёРєР°Р»СЊРЅС‹С… СЃР»РѕРІ.
+      std::map<size_t, size_t> docsRelevance;   // Р РµР»РµРІР°РЅС‚РЅРѕСЃС‚СЊ РґРѕРєСѓРјРµРЅС‚РѕРІ.
 
-      // Разбиение строки запроса на отдельные слова:
-      std::istringstream stream(requests);	// Поток для разбиения текста документа на слова.
-      std::string word;		// Для временного хранения слов, которые будут браться из потока.
+      // Р Р°Р·Р±РёРµРЅРёРµ СЃС‚СЂРѕРєРё Р·Р°РїСЂРѕСЃР° РЅР° РѕС‚РґРµР»СЊРЅС‹Рµ СЃР»РѕРІР°:
+      std::istringstream stream(requests);	// РџРѕС‚РѕРє РґР»СЏ СЂР°Р·Р±РёРµРЅРёСЏ С‚РµРєСЃС‚Р° РґРѕРєСѓРјРµРЅС‚Р° РЅР° СЃР»РѕРІР°.
+      std::string word;		// Р”Р»СЏ РІСЂРµРјРµРЅРЅРѕРіРѕ С…СЂР°РЅРµРЅРёСЏ СЃР»РѕРІ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ Р±СЂР°С‚СЊСЃСЏ РёР· РїРѕС‚РѕРєР°.
 
       while (stream >> word) {
-         // Если слово отсутсвует в словаре, значит оно уникальное, и мы добавляем его в словарь:
+         // Р•СЃР»Рё СЃР»РѕРІРѕ РѕС‚СЃСѓС‚СЃРІСѓРµС‚ РІ СЃР»РѕРІР°СЂРµ, Р·РЅР°С‡РёС‚ РѕРЅРѕ СѓРЅРёРєР°Р»СЊРЅРѕРµ, Рё РјС‹ РґРѕР±Р°РІР»СЏРµРј РµРіРѕ РІ СЃР»РѕРІР°СЂСЊ:
          if (std::find(uniqueWords.begin(), uniqueWords.end(), word) == uniqueWords.end()) {
             uniqueWords.push_back(word);
          }
       }
 
-      // Получаем частоту встречаемости каждого слова в документах (через GetWordCount):
+      // РџРѕР»СѓС‡Р°РµРј С‡Р°СЃС‚РѕС‚Сѓ РІСЃС‚СЂРµС‡Р°РµРјРѕСЃС‚Рё РєР°Р¶РґРѕРіРѕ СЃР»РѕРІР° РІ РґРѕРєСѓРјРµРЅС‚Р°С… (С‡РµСЂРµР· GetWordCount):
       std::vector<std::pair<std::string, size_t>> wordFrequencies;
       for (auto& uniqWord : uniqueWords) {
          auto entries = _index.GetWordCount(uniqWord);
          wordFrequencies.push_back({ uniqWord, entries.size()});
       }
 
-      // Если слово отсутсвует в файлах, пропускаем проверки и сортировки, и добавляем пустой элемент:
+      // Р•СЃР»Рё СЃР»РѕРІРѕ РѕС‚СЃСѓС‚СЃРІСѓРµС‚ РІ С„Р°Р№Р»Р°С…, РїСЂРѕРїСѓСЃРєР°РµРј РїСЂРѕРІРµСЂРєРё Рё СЃРѕСЂС‚РёСЂРѕРІРєРё, Рё РґРѕР±Р°РІР»СЏРµРј РїСѓСЃС‚РѕР№ СЌР»РµРјРµРЅС‚:
       if (wordFrequencies.empty()) {
          std::vector<RelativeIndex> empty;
          results.push_back(empty);
          continue;
       }
 
-      // Сортировка слов по редкости (по количеству документов, в которых они встречаются):
+      // РЎРѕСЂС‚РёСЂРѕРІРєР° СЃР»РѕРІ РїРѕ СЂРµРґРєРѕСЃС‚Рё (РїРѕ РєРѕР»РёС‡РµСЃС‚РІСѓ РґРѕРєСѓРјРµРЅС‚РѕРІ, РІ РєРѕС‚РѕСЂС‹С… РѕРЅРё РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ):
       std::sort(wordFrequencies.begin(), wordFrequencies.end(),
          [](const std::pair<std::string, size_t>& a, const std::pair<std::string, size_t>& b) {
             return a.second < b.second;
          });
 
-      // Подсчитываем абсолютную релевантность каждого документа (сумма count):
+      // РџРѕРґСЃС‡РёС‚С‹РІР°РµРј Р°Р±СЃРѕР»СЋС‚РЅСѓСЋ СЂРµР»РµРІР°РЅС‚РЅРѕСЃС‚СЊ РєР°Р¶РґРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р° (СЃСѓРјРјР° count):
       for (auto& _word : wordFrequencies) {
          for (auto& entry : _index.GetWordCount(_word.first)) {
-            docsRelevance[entry.docID] += entry.count;  // Суммируем частоту слов.
+            docsRelevance[entry.docID] += entry.count;  // РЎСѓРјРјРёСЂСѓРµРј С‡Р°СЃС‚РѕС‚Сѓ СЃР»РѕРІ.
          }
       }
 
-      // Находим максимальную абсолютную релевантность среди всех документов:
+      // РќР°С…РѕРґРёРј РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ Р°Р±СЃРѕР»СЋС‚РЅСѓСЋ СЂРµР»РµРІР°РЅС‚РЅРѕСЃС‚СЊ СЃСЂРµРґРё РІСЃРµС… РґРѕРєСѓРјРµРЅС‚РѕРІ:
       size_t maxRelevance = 0;
       for (auto& relevance : docsRelevance) {
          if (relevance.second > maxRelevance) {
@@ -55,57 +55,48 @@ std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<s
          }
       }
 
-      // Вычисляем относительную релевантность каждого документа:
+      // Р’С‹С‡РёСЃР»СЏРµРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅСѓСЋ СЂРµР»РµРІР°РЅС‚РЅРѕСЃС‚СЊ РєР°Р¶РґРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°:
       std::vector<RelativeIndex> rankedResults;
       for (auto& relevance : docsRelevance) {
          float rank = (float)relevance.second / maxRelevance;
-         size_t docID = relevance.first;    // Номер документа - переменная нужна чисто для ясности.
+         size_t docID = relevance.first;    // РќРѕРјРµСЂ РґРѕРєСѓРјРµРЅС‚Р° - РїРµСЂРµРјРµРЅРЅР°СЏ РЅСѓР¶РЅР° С‡РёСЃС‚Рѕ РґР»СЏ СЏСЃРЅРѕСЃС‚Рё.
          rankedResults.push_back({ docID, rank });
       }
 
-      // Сортировка документов по убыванию относительной релевантности:
+      // РЎРѕСЂС‚РёСЂРѕРІРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ РїРѕ СѓР±С‹РІР°РЅРёСЋ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕР№ СЂРµР»РµРІР°РЅС‚РЅРѕСЃС‚Рё:
       std::sort(rankedResults.begin(), rankedResults.end(), [](const RelativeIndex& a, const RelativeIndex& b) {
          return a.rank > b.rank;
       });
 
-      // Ограничиваем количество результатов по maxResponses:
+      // РћРіСЂР°РЅРёС‡РёРІР°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РїРѕ maxResponses:
       if (rankedResults.size() > maxResponses) {
-         rankedResults.resize(maxResponses);  // Обрезаем до maxResponses:
+         rankedResults.resize(maxResponses);  // РћР±СЂРµР·Р°РµРј РґРѕ maxResponses:
       }
 
-      // Добавление отсортированного результата в общий список:
+      // Р”РѕР±Р°РІР»РµРЅРёРµ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ СЂРµР·СѓР»СЊС‚Р°С‚Р° РІ РѕР±С‰РёР№ СЃРїРёСЃРѕРє:
       results.push_back(rankedResults);
    }
-
-//    Вывод в консоль (для отладки):
-   //for (int i = 0; i < results.size(); i++) {
-   //   std::cout << "NEXT REQ:\n";
-   //   for (int j = 0; j < results[i].size(); j++) {
-   //      std::cout << "docID: " << results[i][j].docID << " \t-\t rank: " << results[i][j].rank << "\n";
-   //   }
-   //   std::cout << "\n";
-   //}
 
    return results;
 }
 
 
 std::vector<std::vector<std::pair<int, float>>> SearchServer::ConvertToPairs(const std::vector<std::vector<RelativeIndex>>& searchResults) {
-   std::vector<std::vector<std::pair<int, float>>> convertedResults; // Итоговый вектор с преобразованными данными.
+   std::vector<std::vector<std::pair<int, float>>> convertedResults; // РС‚РѕРіРѕРІС‹Р№ РІРµРєС‚РѕСЂ СЃ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅС‹РјРё РґР°РЅРЅС‹РјРё.
 
-   // Проходим по каждому списку документов в searchResults:
+   // РџСЂРѕС…РѕРґРёРј РїРѕ РєР°Р¶РґРѕРјСѓ СЃРїРёСЃРєСѓ РґРѕРєСѓРјРµРЅС‚РѕРІ РІ searchResults:
    for (const auto& resultList : searchResults) {
-      std::vector<std::pair<int, float>> convertedList;  // Локальный список для хранения пар <docID, rank>.
+      std::vector<std::pair<int, float>> convertedList;  // Р›РѕРєР°Р»СЊРЅС‹Р№ СЃРїРёСЃРѕРє РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РїР°СЂ <docID, rank>.
 
-      // Проходим по каждому элементу RelativeIndex в текущем списке:
+      // РџСЂРѕС…РѕРґРёРј РїРѕ РєР°Р¶РґРѕРјСѓ СЌР»РµРјРµРЅС‚Сѓ RelativeIndex РІ С‚РµРєСѓС‰РµРј СЃРїРёСЃРєРµ:
       for (const auto& result : resultList) {
-         convertedList.push_back({ result.docID, result.rank }); // Добавляем в список пару <docID, rank.
+         convertedList.push_back({ result.docID, result.rank }); // Р”РѕР±Р°РІР»СЏРµРј РІ СЃРїРёСЃРѕРє РїР°СЂСѓ <docID, rank.
       }
-      // Добавляем готовый список в общий список результатов:
+      // Р”РѕР±Р°РІР»СЏРµРј РіРѕС‚РѕРІС‹Р№ СЃРїРёСЃРѕРє РІ РѕР±С‰РёР№ СЃРїРёСЃРѕРє СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ:
       convertedResults.push_back(std::move(convertedList));
    }
    
-   return convertedResults;   // Возвращаем преобразованный список.
+   return convertedResults;   // Р’РѕР·РІСЂР°С‰Р°РµРј РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅС‹Р№ СЃРїРёСЃРѕРє.
 }
 
 int SearchServer::CountSearchResults(const std::vector<std::vector<RelativeIndex>>& searchResults) {
@@ -113,6 +104,6 @@ int SearchServer::CountSearchResults(const std::vector<std::vector<RelativeIndex
    for (const auto& query_results : searchResults) {
       totalResults += query_results.size();
    }
-//   std::cout << "Total results: " << totalResults << std::endl;    // Для отладки.
+
    return totalResults;
 }

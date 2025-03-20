@@ -2,7 +2,7 @@
 
 std::vector<std::string> ConverterJSON::GetTextDocuments() {
 	// Открываем файл config.json:
-	std::ifstream file("config.json");
+	std::ifstream file(configFile);
 	if (!file.is_open()) {
 		// Ошибка, если файл отсутствует:
 		throw std::runtime_error("config file is missing.");
